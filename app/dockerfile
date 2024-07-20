@@ -1,0 +1,20 @@
+FROM python:alpine3.20
+
+# Use high numbered unencrypted port.
+EXPOSE 8080/tcp
+
+# Put files in an app folder.
+WORKDIR /app
+
+COPY requirements.txt .
+
+# Copy dependencies into image.
+# TODO: Consider pulling requirements inside build stage
+RUN pip install -r requirements.txt
+
+COPY app.py .
+
+ENTRYPOINT [ "flask" ]
+
+# Run on container startup.
+CMD [ "run" ]

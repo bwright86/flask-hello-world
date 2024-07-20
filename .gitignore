@@ -72,3 +72,6 @@ yarn-error.log
 
 # Other Folders
 /.vagrant/
+
+# Ignore local venv dirs
+/app/build/
