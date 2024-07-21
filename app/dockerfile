@@ -9,7 +9,7 @@ WORKDIR /app
 COPY requirements.txt .
 
 # Copy dependencies into image.
-# TODO: Consider pulling requirements inside build stage
+# TODO: Consider pulling requirements inside build stage's venv and COPY packages in dockerfile. Adds visibility of packages, but adds complexity, need to weigh benefits.
 RUN pip install -r requirements.txt
 
 COPY app.py .

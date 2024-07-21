@@ -75,3 +75,6 @@ yarn-error.log
 
 # Ignore local venv dirs
 /app/build/
+
+# Ignore TF state dirs
+**/.terraform/
