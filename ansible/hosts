@@ -1,2 +1,5 @@
-[all]
-localhost
+[local]
+localhost ansible_connection=local
+ 
+[all:vars]
+ansible_python_interpreter=/home/brent/.venv/ansible/bin/python3
