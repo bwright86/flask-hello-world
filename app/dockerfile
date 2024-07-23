@@ -1,7 +1,7 @@
 FROM python:alpine3.20
 
 # Use high numbered unencrypted port.
-EXPOSE 8080/tcp
+EXPOSE 5000/tcp
 
 # Put files in an app folder.
 WORKDIR /app
@@ -14,7 +14,5 @@ RUN pip install -r requirements.txt
 
 COPY app.py .
 
-ENTRYPOINT [ "flask" ]
-
-# Run on container startup.
-CMD [ "run" ]
+# Specify the command to run on container start
+CMD [ "python", "./app.py" ]
