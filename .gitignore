@@ -72,3 +72,9 @@ yarn-error.log
 
 # Other Folders
 /.vagrant/
+
+# Ignore local venv dirs
+/app/build/
+
+# Ignore TF state dirs
+**/.terraform/
