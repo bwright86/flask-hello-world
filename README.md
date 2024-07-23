@@ -27,12 +27,12 @@ The following scenarios are based on a few different use cases:
     | Pro | Fully customizable, and can scale, providing control over every aspect of the application. |
     | Pro | Recovery can be quick, downtime can be reduced, resiliency can be built in, all just like Lightsails |
     | Pro | Deployment can be customized to meet the team's need. |
-    | Con | Many resources are required to deploy, and full understanding is needed manage. |
+    | Con | Many resources are required to deploy, and full understanding is needed to manage. |
     | Con | Failover/Recovery could require more steps, and could take longer to execute. |
 
 ## Considerations
 
-- Using a Terraform Wrapper, like terragrunt, could break up monolithic TF scripts across stacks, making TF modules reusable across projects, and separate configuration details away from implementation details. Not implemented here, as resiliency of app is unknown, and reusability of code is unknown.
+- Using a Terraform Wrapper tool, like terragrunt, could break up monolithic TF scripts across stacks, making TF modules reusable across projects, and separate configuration details away from implementation details. Not implemented here, as resiliency of app is unknown, and reusability of code is unknown.
 - Naming convention uses static single region, this could be extended for multi-region use, by using a naming module like "cloudposse/label/null" to dynamically create tags and resource names.
 - VPCs provide security and control over resources and how they communicate. Care needs to be exercised around public subnets and IGW's, as this exposes resources to the internet. I would recommend splitting the SG's between Internet <-> ALB <-> EC2, but for now the ALB is in public subnet w/ IGW, and EC2 is in Private Subnet.
 - ECS is running on single node, and ALB's are running in 2 AZs. For better resiliency, spreading this across more AZ's and more nodes would reduce failure.
@@ -64,7 +64,7 @@ This section will build the AWS Resources that are needed for the other scenario
 1. Navigate to `/terraform/base/`
 2. Run `terraform init --var-file nonprod.tfvars`
 3. Run `terraform apply --var-file nonprod.tfvars`
-4. Confirm it creates: ECR, and VPC/Subnets/Routes/SG's/NACL's
+4. Confirm it creates: ECR repo, VPC/Subnets/Routes/SGs/NACLs, and IAM Roles/Policy
 5. Tag and push your docker image to the ECR, with:
     ```
     aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin <AWSAccount>.dkr.ecr.us-east-1.amazonaws.com
@@ -75,7 +75,7 @@ This section will build the AWS Resources that are needed for the other scenario
 
 ### Simple
 
-This section will build on top of the base infra, and deploy a Lightsail Container service for the web app.
+This section will build on top of the base infra, and deploys a Lightsail Container service for the web app.
 
 1. Navigate to `/terraform/simple`
 2. Run `terraform init --var-file nonprod.tfvars`
@@ -88,7 +88,7 @@ This section will build on top of the base infra, and deploy a Lightsail Contain
 
 ### Advanced
 
-This section will build on top of the base infra, and deploy all resources for ECS to run and deploy a container.
+This section will build on top of the base infra, and deploy all resources for ECS to run and deploy a containerized web app.
 
 1. Navigate to `/terraform/advanced`
 2. Run `terraform init --var-file nonprod.tfvars`
