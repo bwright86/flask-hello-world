@@ -12,33 +12,38 @@ The following scenarios are based on a few different use cases:
 
     | Pro/Con | Comment |
     | ------- | ------- |
-    | Pro | Reduces security risk by reducing amount of managed resources.
-    | Pro | Lightweight to use, good for POC and potentially internal tooling.
-    | Pro | Recovery is quick, failed deployments automatically roll back to previously-good version.
-    | Pro | Downtime is reduced, active deployments are not made Inactive until new deployment is finished and healthy.
-    | Pro | Resiliency is provided by multiple nodes (Not used to maintain free-tier), and load balancing.
-    | Con | Deployments require some downtime during quick cutover. Multiple Nodes and load balancing in Lightsail would provide resiliency.
-    | Con | Underlying K8 Infrastructure is managed by AWS, so no customizations are available.
+    | Pro | Reduces security risk by reducing amount of managed resources. |
+    | Pro | Lightweight to use, good for POC and potentially internal tooling. |
+    | Pro | Recovery is quick, failed deployments automatically roll back to previously-good version. |
+    | Pro | Downtime is reduced, active deployments are not made Inactive until new deployment is finished and healthy. |
+    | Pro | Resiliency is provided by multiple nodes (Not used to maintain free-tier), and load balancing. |
+    | Con | Deployments require some downtime during quick cutover. Multiple Nodes and load balancing in Lightsail would provide resiliency. |
+    | Con | Underlying K8 Infrastructure is managed by AWS, so no customizations are available. |
 
 - Advanced - Full deployment with EC2, ASG, LT, ALB, ECS. Single node and single container
 
     | Pro/Con | Comment |
     | ------- | ------- |
-    | Pro | Fully customizable, and can scale, providing control over each aspect. |
-    | Pro | 
+    | Pro | Fully customizable, and can scale, providing control over every aspect of the application. |
+    | Pro | Recovery can be quick, downtime can be reduced, resiliency can be built in, all just like Lightsails |
+    | Pro | Deployment can be customized to meet the team's need. |
+    | Con | Many resources are required to deploy, and full understanding is needed manage. |
+    | Con | Failover/Recovery could require more steps, and could take longer to execute. |
 
 ## Considerations
 
-- Using a Terraform Wrapper, like terragrunt, could break up monolithic TF scripts across stacks, make TF modules reusable across projects, and separate configuration details away from implementation details. Not implemented here, as resiliency of app is unknown, and reusability of code is unknown.
+- Using a Terraform Wrapper, like terragrunt, could break up monolithic TF scripts across stacks, making TF modules reusable across projects, and separate configuration details away from implementation details. Not implemented here, as resiliency of app is unknown, and reusability of code is unknown.
 - Naming convention uses static single region, this could be extended for multi-region use, by using a naming module like "cloudposse/label/null" to dynamically create tags and resource names.
 - VPCs provide security and control over resources and how they communicate. Care needs to be exercised around public subnets and IGW's, as this exposes resources to the internet. I would recommend splitting the SG's between Internet <-> ALB <-> EC2, but for now the ALB is in public subnet w/ IGW, and EC2 is in Private Subnet.
-- Terraform lock.hcl files provide version pinning of modules. It is encouraged to version control these in SCM to maintain consistent deployments, but it presents a layer of maintenance to upgrade and validate new versions periodically.
+- ECS is running on single node, and ALB's are running in 2 AZs. For better resiliency, spreading this across more AZ's and more nodes would reduce failure.
+- AWS's Well-Architected Tool could be used to review architecture and provide insight into best practices. This was not covered here, as it was a simpler app and built as a POC.
+- Terraform lock.hcl files provide "version pinning" of modules. It can be good practice to version control these in SCM to maintain consistent deployments, but it presents a layer of maintenance to upgrade and validate new versions periodically.
 - The following security tools could be integrated for better security posture:
   - Enabling AWS SecurityHub would centralize alerts on resource misconfiguration based on AWS security best practices. Other tools can augment this ability, like: Palo Alto Prisma, SNYK, Wiz
   - Enabling GuardDuty provides threat detection across all AWS resources, runtimes (EC2, ECS, EKS, Lamgda), and RDS. Not implemented here, to maintain free-tier usage.
   - Enabling AWS Inspector would improve vulnerability scanning on packages, builds, and runtimes. It also monitors for unintended network exposure.
   - Enabling AWS CodeGuru Security/Reviewer would provide SAST code scanning for issues. If code is built in CodeBuild pipelines or stored in CodeCommit repositories.
-  - Operationalizing these tools to Developers and their IDE's make vulnerability/hardening easier while code is still fresh in development.
+  - Operationalizing these tools to Developers and their IDE's would make vulnerability/hardening easier while code is still fresh in development.
 
 
 ## Steps To Implement
