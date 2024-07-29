@@ -78,3 +78,6 @@ yarn-error.log
 
 # Ignore TF state dirs
 **/.terraform/
+
+# Ignore windows zone identifier files
+**/*:Zone.Identifier
